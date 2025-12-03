@@ -9,7 +9,7 @@ What constitutes a hardware wallet hack?<br>
 I count anything as a "hack" that allows a hacker to change a hardware wallet's intended behavior. This means it is not relevant to me if the hack was ever exploited, or if it has received a low likelihood rating from vendors.
 
 Know of a hack that is not included?<br>
-Let me know here: <https://github.com/TheCharlatan/thecharlatan.github.io><br>
+Let me know here: <https://github.com/sedited/thecharlatan.github.io><br>
 
 # 2014
 ### Juli:
@@ -422,14 +422,14 @@ Let me know here: <https://github.com/TheCharlatan/thecharlatan.github.io><br>
 :scroll: Title: Troublesome Change Outputs<br> 
 :nerd_face: Detail: It is possible to make a valid PSBT file that sends the change left from a transaction to a unknown location. If an attacker had your XPUB, and could change your PSBT file before you sign, they could modify the file so that the “change” (ie. the balance of Bitcoins you are sending back to yourself) goes to an effectively unknown address. If the attacker is profit motivated, they can ransom the knowledge of those change UTXO back to you.<br> 
 :poop: Bug: BIP32 address derivation ransom attack<br>
-:sunglasses: Reporter: TheCharlatan<br> 
+:sunglasses: Reporter: sedited<br> 
 :mega: Explanation from vendor: <https://blog.coinkite.com/troublesome-change/><br> 
 :dart: Explanation from reporter: <https://thecharlatan.github.io/Ransom-Coldcard/><br>
 
 :office: Vendor: Coldcard<br>
 :scroll: Title: Ransom attack on Coldcard's receive address verification<br>
 :nerd_face: Detail: By inserting newlines in the derivation path string sent to the Coldcard, the displayed characters could be split. This could trick users into verifying an address for a BIP32 derivation path that is not easily accessible.<br>
-:sunglasses: Reporter: TheCharlatan<br>
+:sunglasses: Reporter: sedited<br>
 :poop: Bug: Bad input validation from host<br> 
 :dart: Explanation from reporter: <https://thecharlatan.github.io/Ransom-Coldcard/><br>
 
@@ -524,7 +524,7 @@ Let me know here: <https://github.com/TheCharlatan/thecharlatan.github.io><br>
 :scroll: Title: Monero tx unlock time not verified<br>
 :nerd_face: Detail: Non-verification of the monero unlock time value could have allowed a compromised host to permanently lock-up a user's monero. After the initial patch another bug (integer overflow) was introduced that would have allowed the host to show a wrong unlock time to the user.<br>
 :poop: Bug: Bad transaction validation on device<br>
-:sunglasses: Reporter: TheCharlatan<br>
+:sunglasses: Reporter: sedited<br>
 :mega: Explanation from vendor: <https://donjon.ledger.com/lsb/009/><br>
 :dart: Explanation from reporter:
 <https://thecharlatan.ch/Wallet-Timelock/><br>
@@ -534,7 +534,7 @@ Let me know here: <https://github.com/TheCharlatan/thecharlatan.github.io><br>
 :scroll: Title: Monero tx unlock time not verified<br>
 :nerd_face: Detail: Non-verification of the monero unlock time value could have allowed a compromised host to permanently lock-up a user's monero.<br>
 :poop: Bug: Bad transaction validation on device<br>
-:sunglasses: Reporter: TheCharlatan<br>
+:sunglasses: Reporter: sedited<br>
 :mega: Explanation from vendor: <https://blog.trezor.io/details-of-firmware-updates-for-trezor-one-version-1-9-0-and-trezor-model-t-version-2-3-0-46deb141fc09><br>
 :dart: Explanation from reporter:
 <https://thecharlatan.ch/Wallet-Timelock/><br>
@@ -546,7 +546,7 @@ Let me know here: <https://github.com/TheCharlatan/thecharlatan.github.io><br>
 :scroll: Title: Supply Chain Attack with attacker controlled Firmware<br>
 :nerd_face: Detail: The Coldcard does a factory reset when an existing PIN is changed to an empty PIN , contrary to Coldcard’s claims that a factory reset is impossible. This can be used to distribute tampered devices without much effort. Coldcard has not patched the issue to date.<br>
 :poop: Bug: Bad PIN check / zero condition<br>
-:sunglasses: Reporter: TheCharlatan<br>
+:sunglasses: Reporter: sedited<br>
 :mega: Explanation from vendor: <https://blog.coinkite.com/supply-chain-trust-minimized/><br>
 :dart: Explanation from reporter: <https://thecharlatan.github.io/Coldcard-Supply-Chain/><br>
 
@@ -644,7 +644,7 @@ Let me know here: <https://github.com/TheCharlatan/thecharlatan.github.io><br>
 :scroll: Title: Bitcoin derived fork/altcoins cross account stealing<br>
 :nerd_face: Detail: Same as Ledger<br>
 :poop: Bug: Bad key path validation and isolation between apps<br>
-:sunglasses: Reporter: TheCharlatan<br>
+:sunglasses: Reporter: sedited<br>
 :dart: Explanation from reporter: <https://thecharlatan.ch/Coin-Isolation/><br>
 
 :office: Vendor: Trezor / Keepkey<br>
