@@ -9,6 +9,8 @@ optimizations that do not affect the architecture in a significant way, like
 low-level CPU instructions. This is based on my own understanding, which may be
 wrong, and is definitely biased.
 
+### Validating a block
+
 When a Bitcoin Core node receives a block, the node eventually passes it to the
 [ProcessNewBlock](https://github.com/bitcoin/bitcoin/blob/7802e578c3f1e9a5d9b57fb003349d0e032bb43b/src/validation.cpp#L4387)
 function. This is the entry point to the block validation logic. The checks the
@@ -61,6 +63,8 @@ containing all the outputs the block has spent. This "undo" data is used during
 a re-org: The coins spent by blocks no longer part of the chain are added back
 to the `CCoinsViewCache`. Finally, the block is marked as valid and added to
 the `CChain`.
+
+### Validation optimizations
 
 The main design goal driving this architecture is allowing for
 "[ultra-prune](https://github.com/bitcoin/bitcoin/pull/1677)": The node can
@@ -144,6 +148,8 @@ still run, meaning users of this feature still validate all "Check\*"- and
 "Accept\*"-level checks, and ensure that no coins are double-spent. For
 platforms that lack processing power, like small system-on-a-chip computers,
 this means a significant reduction in synchronization time.
+
+### Architectural tradeoffs
 
 The bulk of validation happens sequentially, one block at a time. The UTXO set
 is atomically updated block-by-block. A future optimization allows for parallel
