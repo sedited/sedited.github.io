@@ -97,6 +97,14 @@ that avoids reading and writing the short-lived coins to disk. Adding, reading,
 and removing these coins happens entirely in memory, without any on-disk
 interaction.
 
+A recently introduced optimization asynchronously fetches coins from disk by
+having multiple threads read from the database in parallel
+(`CoinsViewOverlay`). Once the required coins from a transaction are retrieved,
+the transaction's scripts are validated in `CCheckQueueControl`. In the
+meantime, coins from the next transactions in the block are being fetched in
+the background. This essentially minimizes the time the "Chain"-level checks
+spend waiting on filesystem reads.
+
 To maximise time spent in validation routines as opposed to having to wait on
 blocks to arrive from peers, blocks can be processed out-of-order, allowing for
 a constant feed of incoming blocks from peers to be processed. If an
@@ -151,13 +159,9 @@ this means a significant reduction in synchronization time.
 
 ### Architectural tradeoffs
 
-The bulk of validation happens sequentially, one block at a time. The UTXO set
-is atomically updated block-by-block. A future optimization allows for parallel
-retrieval of coins from disk ([Bitcoin Core PR
-#35295](https://github.com/bitcoin/bitcoin/pull/35295)), which alleviates this
-bottleneck. This essentially pre-warms the cache of the `CCoinsViewCache`.
-Still, no other validation work happens in the meantime, and the node is
-blocked from making progress on other tasks.
+The UTXO set is atomically updated block-by-block. While a block is being
+validated, no other block is validated in parallel. The Check* and Accept*
+level functions allow for no parallelism.
 
 A single mutex, `cs_main`, protects the validation caches, the UTXO set, and
 the block tree. This means that no retrieval or mutation of any of these data
