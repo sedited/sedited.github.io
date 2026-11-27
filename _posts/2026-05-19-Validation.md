@@ -38,8 +38,8 @@ serialized. Once a block has passed these checks, it is added to the block tree
 and written to disk. Crucially, this means a block that passed through these
 checks, but is later found invalid, for example by an invalid script in one of
 its transactions, is nevertheless persisted on disk. To avoid an attacker
-filling the disk, single blocks below a certain cumulative proof of work
-threshold are rejected.
+filling the disk, blocks below a certain cumulative proof of work threshold are
+rejected.
 
 Lastly, the block passes through the "Chain"-level validation functions. These
 interact with two data structures: a vector of block tree entries from genesis
@@ -58,11 +58,11 @@ Then the script interpreter is invoked for every input and its coin of every
 transaction in the block. If these checks pass, new coins are added to the
 cache. All the outputs that are spent by the block are added to a separate data
 structure (`CBlockUndo`) and persisted to disk. This means that after
-validation, every block persisted on disk also has a corresponding `CBlockUndo`
-containing all the outputs the block has spent. This "undo" data is used during
-a re-org: The coins spent by blocks no longer part of the chain are added back
-to the `CCoinsViewCache`. Finally, the block is marked as valid and added to
-the `CChain`.
+validation, every block persisted on disk and validated by the "Chain"-level
+functions, also has a corresponding `CBlockUndo` containing all the outputs the
+block has spent. This "undo" data is used during a re-org: The coins spent by
+blocks no longer part of the chain are added back to the `CCoinsViewCache`.
+Finally, the block is marked as valid and added to the `CChain`.
 
 ### Validation optimizations
 
@@ -87,12 +87,12 @@ Script validation speedups mostly come from improvements to the signature
 verification code, both in `libsecp256k1` and the code for producing signature
 message hashes. A block's transactions' scripts are also evaluated in parallel
 using multiple CPU cores (`CCheckQueueControl`). Script validation is currently
-the only validation step happening in parallel.
+one of a few validation steps happening in parallel.
 
 Historically, around 80% of spent coins are spent within a day of being created
 ([Liu et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC8989952/figure/Fig3/)).
 This allows for an efficient caching strategy: By retaining the latest coins in
-memory through the`CCoinsViewCache`, a cut-through optimization is achieved
+memory through the `CCoinsViewCache`, a cut-through optimization is achieved
 that avoids reading and writing the short-lived coins to disk. Adding, reading,
 and removing these coins happens entirely in memory, without any on-disk
 interaction.
@@ -122,7 +122,7 @@ headers are synced, the node then begins requesting full blocks from peers
 guided by this header chain.
 
 Bitcoin Core also optimizes block relay and serving speed. Serving blocks
-quickly makes other peer's IBD faster. Timely Block relay is a significant
+quickly makes other peers' IBD faster. Timely block relay is a significant
 factor in dictating miners' margin. `AcceptBlock` saves blocks to disk in their
 full network serialization format. This allows a node to respond to a `GETDATA`
 request without any (de-)serialization overhead. The node also immediately
@@ -149,10 +149,10 @@ Bitcoin Core ships the default-on "assumevalid" feature, which skips script
 validation for all historical blocks before a certain target block. The feature
 introduces an additional trust assumption that a sufficiently buried target
 block would have been rejected by majority hashrate if it had invalid scripts.
-This is not a "checkpoint": it only skips script verification for blocks
-building towards the target block. The target block is set by the Bitcoin Core
-developers at release time, but users may override it. Coin-level checks are
-still run, meaning users of this feature still validate all "Check\*"- and
+This is not a "checkpoint": it only skips script verification for ancestors of
+the target block. The target block is set by the Bitcoin Core developers at
+release time, but users may override it. Coin-level checks are still run,
+meaning users of this feature still validate all "Check\*"- and
 "Accept\*"-level checks, and ensure that no coins are double-spent. For
 platforms that lack processing power, like small system-on-a-chip computers,
 this means a significant reduction in synchronization time.
